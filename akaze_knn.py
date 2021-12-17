@@ -6,7 +6,7 @@ from PIL import Image
 #https://deep-learning-study.tistory.com/260
 
 response1 = requests.get('https://bodydoctors.co.kr/data/goods/1/2019/04/37_tmp_2c4ce885ec6e40708ac22cf0821ad47d9246view.jpg')
-response2 = requests.get('http://img4.tmon.kr/cdn3/deals/2020/05/08/2277913066/2277913066_front_ea7a587bb1.jpg')
+response2 = requests.get('https://thumbnail8.coupangcdn.com/thumbnails/remote/492x492ex/image/retail/images/2019/12/02/18/2/944013b8-21c2-4455-9c6b-a3143a24cc2a.jpg')
 img1 = np.array(Image.open(io.BytesIO(response1.content)))
 img2 = np.array(Image.open(io.BytesIO(response2.content)))
 
@@ -22,7 +22,7 @@ kp2, desc2 = detector.detectAndCompute(gray2, None)
 matcher = cv2.BFMatcher_create()
 # 매칭 계산 ---④
 matches = matcher.knnMatch(desc1, desc2, 2) # knnMatch로 특징점 2개 검출
-
+print(matches)
 # 좋은 매칭 결과 선별
 good_matches = []
 for m in matches: # matches는 두개의 리스트로 구성
