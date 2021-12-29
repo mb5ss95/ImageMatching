@@ -3,7 +3,7 @@ import cv2
 
 img = cv2.imread("1.jpg")
 
-poly = np.array([[10,300],[150,200],[300,300],[350,200],[310,40],[35,200]])
+poly = np.array([[10,300],[150,200],[300,300],[350,200],[310,40],[35,200],[35,100],[10,20],[100,200]])
 print(poly)
 print(type(poly))
 ## (1) Crop the bounding rect
@@ -13,7 +13,7 @@ croped = img[y:y+h, x:x+w].copy()
 
 ## (2) make mask
 poly = poly - poly.min(axis=0)
-
+print(poly)
 mask = np.zeros(croped.shape[:2], np.uint8)
 cv2.drawContours(mask, [poly], -1, (255, 255, 255), -1, cv2.LINE_AA)
 

@@ -36,7 +36,7 @@ def compare_sift_bfmatch(img1, img2, gray1, gray2):
     str2 = 'BFMatcher + SIFT' + str(cnt)
     cv2.imshow(str2, res)
     cnt = 2
-        # 좋은 매칭점의 queryIdx로 원본 영상의 좌표 구하기 ---③
+    # 좋은 매칭점의 queryIdx로 원본 영상의 좌표 구하기 ---③
     src_pts = np.float32([ kp1[m.queryIdx].pt for m in good_matches ])
     # 좋은 매칭점의 trainIdx로 대상 영상의 좌표 구하기 ---④
     dst_pts = np.float32([ kp2[m.trainIdx].pt for m in good_matches ])
@@ -86,7 +86,6 @@ def start(img1, img2):
     img1 = img1[rect1[1]: rect1[1] + rect1[3], rect1[0]: rect1[0] + rect1[2]]
     img2 = img2[rect2[1]: rect2[1] + rect2[3], rect2[0]: rect2[0] + rect2[2]]
 
-
     img1 = cv2.resize(img1, (int(width1), int(height1)), interpolation=cv2.INTER_AREA)
     img2 = cv2.resize(img2, (int(width2), int(height2)), interpolation=cv2.INTER_AREA)
     #img2 = cv2.polylines(img2,[np.int32(dst_pts)],True,255,1, cv2.LINE_AA)
@@ -94,18 +93,65 @@ def start(img1, img2):
     
     grayA = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
     grayB = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
+    res = cv2.drawMatches(img1, [], img2, [], [], None, flags=cv2.DRAW_MATCHES_FLAGS_NOT_DRAW_SINGLE_POINTS)
+
+    cv2.imshow('SSIM + resize', res)
+
     score, diff = compare_ssim(grayA, grayB, full=True)
+        # full=True: 이미지 전체에 대해서 구조비교를 수행한다.
+    diff = (diff * 255).astype('uint8')
+    print(f'SSIM2 : {score:.6f}')
+    point1 = src_pts.astype(np.int32)
+    ## (2) make mask
+    poly = point1 - point1.min(axis=0)
+
+    mask = np.zeros(img1.shape[:2], np.uint8)
+    cv2.drawContours(mask, [poly], -1, (255, 255, 255), -1, cv2.LINE_AA)
+
+    ## (3) do bit-op
+    dst = cv2.bitwise_and(img1, img1, mask=mask)
+
+    ## (4) add the white background
+    bg = np.ones_like(img1, np.uint8)*255
+    cv2.bitwise_not(bg,bg, mask=mask)
+    dst1 = bg + dst
+
+    point2 = dst_pts.astype(np.int32)
+    ## (2) make mask
+    poly = point2 - point2.min(axis=0)
+
+    mask = np.zeros(img2.shape[:2], np.uint8)
+    cv2.drawContours(mask, [poly], -1, (255, 255, 255), -1, cv2.LINE_AA)
+
+    ## (3) do bit-op
+    dst = cv2.bitwise_and(img2, img2, mask=mask)
+
+    ## (4) add the white background
+    bg = np.ones_like(img2, np.uint8)*255
+    cv2.bitwise_not(bg,bg, mask=mask)
+    dst2 = bg + dst
+
+    height1, width1 = dst1.shape[:2]
+    height2, width2 = dst2.shape[:2]
+
+    img1 = cv2.resize(dst1, (int(width1), int(height1)), interpolation=cv2.INTER_AREA)
+    img2 = cv2.resize(dst2, (int(width1), int(height1)), interpolation=cv2.INTER_AREA)
+    #img2 = cv2.polylines(img2,[np.int32(dst_pts)],True,255,1, cv2.LINE_AA)
+    #img2 = cv2.drawContours(img2, [np.int32(dst_pts)], 0, (0, 255, 0), 3)
+    
+    grayA = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
+    grayB = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
 
 
     res = cv2.drawMatches(img1, [], img2, [], [], None, flags=cv2.DRAW_MATCHES_FLAGS_NOT_DRAW_SINGLE_POINTS)
 
 
-
+    score, diff = compare_ssim(grayA, grayB, full=True)
     # full=True: 이미지 전체에 대해서 구조비교를 수행한다.
     diff = (diff * 255).astype('uint8')
     print(f'SSIM3 : {score:.6f}')
 
-    cv2.imshow('SSIM + resize', res)
+    cv2.imshow('SSIM + resize + polygon', res)
     cv2.waitKey()
     cv2.destroyAllWindows()
 

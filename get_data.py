@@ -2,8 +2,9 @@ import requests
 import json
 import sift_bf_ssim as sb
 import sift_bfmatcher as s
+import sift_bf_ssim_polygon as sp
 
-reportnum = '20040020028606'
+reportnum = '20040020028607'
 #reportnum = '20040020028606'
 # 20040020028607 200600200032064 200400170061194 201600080352
 ansick = 'http://scm.ansick.com'
@@ -20,4 +21,4 @@ for i in data1:
     data2 = json.loads(url2.text)['data']
     for j in data2:
         img_name2 = ansick + j['img']
-        sb.start(img_name1, img_name2)
+        sp.start(img_name1, img_name2)
