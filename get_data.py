@@ -1,8 +1,11 @@
 import requests
 import json
-import sift_bfmatcher as sb
+import sift_bf_ssim as sb
+import sift_bfmatcher as s
 
-reportnum = '20060020008708'
+reportnum = '20040020028606'
+#reportnum = '20040020028606'
+# 20040020028607 200600200032064 200400170061194 201600080352
 ansick = 'http://scm.ansick.com'
 
 url1 = requests.get("http://scm.ansick.com/product/ansick_product_same.php?c=target&reportnum="+reportnum)
@@ -17,6 +20,4 @@ for i in data1:
     data2 = json.loads(url2.text)['data']
     for j in data2:
         img_name2 = ansick + j['img']
-
         sb.start(img_name1, img_name2)
-        
