@@ -3,10 +3,8 @@ import numpy as np
 import requests, io, cv2
 from PIL import Image
 from skimage.metrics import structural_similarity as compare_ssim
-cnt = 1
 
 def compare_sift_bfmatch(img1, img2, gray1, gray2):
-    global cnt
     # SIFT 서술자 추출기 생성 ---①
     detector = cv2.xfeatures2d.SIFT_create()
     # 각 영상에 대해 키 포인트와 서술자 추출 ---②
@@ -33,9 +31,7 @@ def compare_sift_bfmatch(img1, img2, gray1, gray2):
             %(len(good_matches),len(matches), min_dist, max_dist, good_thresh))
 
     res = cv2.drawMatches(img1, kp1, img2, kp2, good_matches, None, flags=cv2.DRAW_MATCHES_FLAGS_NOT_DRAW_SINGLE_POINTS)
-    str2 = 'BFMatcher + SIFT' + str(cnt)
-    cv2.imshow(str2, res)
-    cnt = 2
+    cv2.imshow('BFMatcher + SIFT', res)
         # 좋은 매칭점의 queryIdx로 원본 영상의 좌표 구하기 ---③
     src_pts = np.float32([ kp1[m.queryIdx].pt for m in good_matches ])
     # 좋은 매칭점의 trainIdx로 대상 영상의 좌표 구하기 ---④

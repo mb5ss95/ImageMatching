@@ -1,12 +1,9 @@
 import requests
 import json
-import sift_bf_ssim as sb
-import sift_bfmatcher as s
 import sift_bf_ssim_polygon as sp
 
-reportnum = '20040020028607'
-#reportnum = '20040020028606'
-# 20040020028607 200600200032064 200400170061194 201600080352
+reportnum = '200600200032064'
+# 20040020028607 200600200032064 200400170061194 201600080352 20040020028606
 ansick = 'http://scm.ansick.com'
 
 url1 = requests.get("http://scm.ansick.com/product/ansick_product_same.php?c=target&reportnum="+reportnum)
