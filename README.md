@@ -9,7 +9,7 @@
 - SIFT, SURF, KAZE 등이 있음
 - RGB 값의 기울기 이용해, 방향 성분으로 영상의 특징을 기술
 
-### 이진 특징 벡터 
+#### 이진 특징 벡터 
 - 해밍 거리(Hamming Distance) 사용
 - numpy.uint8 자료형, 비트 단위로 저장
 - AKAZE, ORB, BRIEF 등이 있음
