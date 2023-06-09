@@ -3,13 +3,13 @@
 ## 1. 특징점 추출
 
 ### 1-1. 특징 벡터
-- 실수 특징 벡터 
+### 실수 특징 벡터 
 - L2 노름(L2 Norm) 사용
 - numpy.float32 자료형, 실수 정보를 저장
 - SIFT, SURF, KAZE 등이 있음
 - RGB 값의 기울기 이용해, 방향 성분으로 영상의 특징을 기술
 
-- 이진 특징 벡터 
+### 이진 특징 벡터 
 - 해밍 거리(Hamming Distance) 사용
 - numpy.uint8 자료형, 비트 단위로 저장
 - AKAZE, ORB, BRIEF 등이 있음
